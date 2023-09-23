@@ -1,0 +1,193 @@
+openapi: 3.0.0
+info:
+  title: E-commerce API
+  description: API documentation for an e-commerce application.
+  version: 1.0.0
+
+paths:
+  /product/categories:
+    get:
+      summary: Get all categories
+      description: Retrieve a list of all available product categories.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example: ["Category1", "Category2"]
+    post:
+      summary: Create a new category
+      description: Create a new product category.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string  # Define the request body as a string
+      responses:
+        '201':
+          description: Category created successfully
+        '400':
+          description: Invalid category data
+
+  /product/product:
+    get:
+      summary: Get all products
+      description: Retrieve a list of all available products.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example: [{"name": "Product1", "price": 10, "description": "Description1", "category": "Category1"}, {"name": "Product2", "price": 20, "description": "Description2", "category": "Category2"}]
+    post:
+      summary: Add multiple products
+      description: Add multiple products to the database.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  price:
+                    type: number
+                  description:
+                    type: string
+                  category:
+                    type: string
+      responses:
+        '201':
+          description: Products added successfully
+        '400':
+          description: Invalid product data
+
+  /product/product/{id}:
+    get:
+      summary: Get specific product
+      description: Retrieve details of a specific product by its ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The ID of the product to retrieve.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example: {"name": "Product1", "price": 10, "description": "Description1", "category": "Category1"}
+
+  /cart/view:
+    get:
+      summary: View products in the cart
+      description: Retrieve the list of products in the user's cart.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example: [{"name": "Product1", "price": 10, "description": "Description1", "category": "Category1"}, {"name": "Product2", "price": 20, "description": "Description2", "category": "Category2"}]
+        '404':
+          description: Cart is empty
+
+  /cart/add/{productid}:
+    post:
+      summary: Add a product to the cart
+      description: Add a product to the user's cart by product ID.
+      parameters:
+        - in: path
+          name: productid
+          required: true
+          schema:
+            type: string
+          description: The ID of the product to add to the cart.
+      responses:
+        '201':
+          description: Product added to the cart
+        '404':
+          description: Product not found
+
+  /cart/remove/{productid}:
+    delete:
+      summary: Remove a product from the cart
+      description: Remove a product from the user's cart by product ID.
+      parameters:
+        - in: path
+          name: productid
+          required: true
+          schema:
+            type: string
+          description: The ID of the product to remove from the cart.
+      responses:
+        '200':
+          description: Product removed from the cart
+        '404':
+          description: Product not found
+
+  /order/placeOrder:
+    post:
+      summary: Place an order
+      description: Change the order status to 'placed' for the user.
+      responses:
+        '201':
+          description: Order placed successfully
+        '404':
+          description: No items in the cart
+
+  /order/orderDetails:
+    get:
+      summary: Get placed orders
+      description: Retrieve details of orders that have been placed.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example: [{"name": "Order1", "status": "placed"}, {"name": "Order2", "status": "placed"}]
+        '404':
+          description: No orders placed
+
+  /user/register:
+    post:
+      summary: Register a new user
+      description: Register a new user in the system.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '201':
+          description: User registered successfully
+        '400':
+          description: Invalid user data
+
+  /user/login:
+    post:
+      summary: Login a user
+      description: Log in an existing user.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: User logged in successfully
+        '401':
+          description: Authentication failed
